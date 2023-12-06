@@ -1,4 +1,4 @@
-import React, { useLayoutEffect } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import {
   View,
   Text,
@@ -14,9 +14,12 @@ import img1 from "../assets/salon_home.png";
 import { Feather } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
 import DatePicker from "react-native-date-ranges";
+import { Entypo } from "@expo/vector-icons";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const [selectedDates, setSelectedDates] = useState();
+  console.log(selectedDates);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -89,6 +92,7 @@ const HomeScreen = () => {
               borderColor: "#FFC72C",
               borderWidth: 2,
               paddingVertical: 15,
+              gap: 15,
             }}
           >
             <Fontisto name="date" size={24} color="black" />
@@ -119,14 +123,49 @@ const HomeScreen = () => {
               }}
               selectedBgColor="#0047AB"
               customButton={(onConfirm) => customButton(onConfirm)}
-              //onConfirm={}
+              onConfirm={(startDate, endDate) =>
+                setSelectedDates(startDate, endDate)
+              }
               allowFontScaling={false}
               placeholder={"Apr 27, 2018 - Jul 18, 2018"}
               mode={"range"}
             />
           </Pressable>
-          <Pressable></Pressable>
-          <Pressable></Pressable>
+          <Pressable
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              paddingHorizontal: 10,
+              borderColor: "#FFC72C",
+              borderWidth: 2,
+              paddingVertical: 15,
+              gap: 15,
+            }}
+          >
+            <Entypo name="scissors" size={24} color="black" />
+            <TextInput placeholder="Choose service" />
+          </Pressable>
+          <Pressable
+            style={{
+              paddingHorizontal: 10,
+              borderColor: "#FFC72C",
+              borderWidth: 2,
+              paddingVertical: 15,
+              backgroundColor: "#2a52be",
+              gap: 15,
+            }}
+          >
+            <Text
+              style={{
+                textAlign: "center",
+                fontSize: 15,
+                fontWeight: "500",
+                color: "white",
+              }}
+            >
+              Search
+            </Text>
+          </Pressable>
         </View>
       </ScrollView>
     </View>
