@@ -22,6 +22,7 @@ import { ModalButton } from "react-native-modals";
 import { ModalTitle } from "react-native-modals";
 import { SlideAnimation } from "react-native-modals";
 import { ModalContent } from "react-native-modals";
+import DropDownDistrict from "../components/DropDownDistrict";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -82,23 +83,11 @@ const HomeScreen = () => {
           }}
         >
           <View>
-            <Pressable
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                paddingHorizontal: 10,
-                borderColor: "#FFC72C",
-                borderWidth: 2,
-                paddingVertical: 15,
-                gap: 15,
-              }}
-            >
-              <Feather name="search" size={24} color="black" />
-              <TextInput
-                placeholderTextColor="black"
-                placeholder="Enter your district"
-              />
-            </Pressable>
+            <DropDownDistrict
+              icon={<Feather name="search" size={24} color="black" />}
+              placeholder="Choose district"
+              onSelect={(value) => setService(value)}
+            />
             <Pressable
               style={{
                 flexDirection: "row",
