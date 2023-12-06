@@ -9,10 +9,12 @@ import {
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
+import { useRoute } from "@react-navigation/native";
 
-const DropDownDistrict = () => {
+const DropDownDistrict = ({ onSelect }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
+  const district = useRoute();
 
   const options = [
     "Centru",
@@ -34,6 +36,7 @@ const DropDownDistrict = () => {
       }}
       onPress={() => {
         setSelectedOption(item);
+        onSelect(item); // Call the onSelect callback with the selected item
         setModalVisible(false);
       }}
     >
@@ -59,7 +62,9 @@ const DropDownDistrict = () => {
         <Feather name="search" size={24} color="black" />
         <TextInput
           placeholderTextColor="black"
-          placeholder="Choose district"
+          placeholder={
+            district?.params ? district.params.input : "Choose district"
+          }
           value={selectedOption}
           editable={false}
         />

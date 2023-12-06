@@ -7,8 +7,9 @@ import {
   Pressable,
   TextInput,
   Button,
+  Alert,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import img1 from "../assets/salon_home.png";
 import DropDownService from "../components/DropDownService";
@@ -20,10 +21,17 @@ import DropDownDistrict from "../components/DropDownDistrict";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-  const [selectedDates, setSelectedDates] = useState();
-  const [service, setService] = useState();
-  const [modalVisible, setModalVisible] = useState(false);
-
+  const [formData, setFormData] = useState({
+    selectedDates: null,
+    district: null,
+    service: null,
+  });
+  const [dates, setDates] = useState({
+    startDate: null,
+    endDate: null,
+  });
+  const districtRoute = useRoute();
+  const { selectedDates, district, service } = formData;
   console.log(selectedDates);
 
   useLayoutEffect(() => {
@@ -64,6 +72,31 @@ const HomeScreen = () => {
     );
   };
 
+  const searchSalons = () => {
+    console.log("Debugging:", dates.startDate, district, service);
+
+    if (!dates?.startDate || !district || !service) {
+      Alert.alert(
+        "Invalid Details",
+        "Please enter all the details",
+        [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel",
+          },
+          { text: "OK", onPress: () => console.log("OK Pressed") },
+        ],
+        { cancelable: false }
+      );
+    } else {
+      // Save the form data in JSON format
+      const formDataJSON = JSON.stringify(formData);
+      console.log("Form Data JSON:", formDataJSON);
+
+      // Perform additional actions if needed
+    }
+  };
   return (
     <>
       <View>
@@ -80,7 +113,9 @@ const HomeScreen = () => {
             <DropDownDistrict
               icon={<Feather name="search" size={24} color="black" />}
               placeholder="Choose district"
-              onSelect={(value) => setService(value)}
+              onSelect={(value) =>
+                setFormData({ ...formData, district: value })
+              }
             />
             <Pressable
               style={{
@@ -90,7 +125,7 @@ const HomeScreen = () => {
                 borderColor: "#FFC72C",
                 borderWidth: 2,
                 paddingVertical: 15,
-                gap: 15,
+                gap: selectedDates ? 25 : 80,
               }}
             >
               <Fontisto name="date" size={24} color="black" />
@@ -121,20 +156,28 @@ const HomeScreen = () => {
                 }}
                 selectedBgColor="#0047AB"
                 customButton={(onConfirm) => customButton(onConfirm)}
-                onConfirm={(startDate, endDate) =>
-                  setSelectedDates(startDate, endDate)
-                }
+                onConfirm={(startDate, endDate) => {
+                  setDates({ startDate, endDate });
+                  setFormData({
+                    ...formData,
+                    selectedDates: {
+                      startDate: startDate?.startDate,
+                      endDate: startDate?.endDate,
+                    },
+                  });
+                }}
                 allowFontScaling={false}
-                placeholder={"Apr 27, 2018 - Jul 18, 2018"}
+                placeholder={"Choose the timeline"}
                 mode={"range"}
               />
             </Pressable>
             <DropDownService
               icon={<Entypo name="scissors" size={24} color="black" />}
               placeholder="Choose service"
-              onSelect={(value) => setService(value)}
+              onSelect={(value) => setFormData({ ...formData, service: value })}
             />
             <Pressable
+              onPress={searchSalons}
               style={{
                 paddingHorizontal: 10,
                 borderColor: "#FFC72C",

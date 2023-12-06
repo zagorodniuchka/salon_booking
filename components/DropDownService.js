@@ -8,10 +8,12 @@ import {
   TextInput,
 } from "react-native";
 import { Entypo } from "@expo/vector-icons";
+import { useRoute } from "@react-navigation/native";
 
-const DropDownService = () => {
+const DropDownService = ({ onSelect }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
+  const service = useRoute();
 
   const options = [
     "Coloration",
@@ -35,6 +37,7 @@ const DropDownService = () => {
       }}
       onPress={() => {
         setSelectedOption(item);
+        onSelect(item);
         setModalVisible(false);
       }}
     >
@@ -60,7 +63,9 @@ const DropDownService = () => {
         <Entypo name="scissors" size={24} color="black" />
         <TextInput
           placeholderTextColor="black"
-          placeholder="Choose service"
+          placeholder={
+            service?.params ? service.params.input : "Choose service"
+          }
           value={selectedOption}
           editable={false}
         />
