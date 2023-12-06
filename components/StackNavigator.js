@@ -8,6 +8,7 @@ import { Entypo } from "@expo/vector-icons";
 import SavedScreen from "../screens/SavedScreen";
 import BookingScreen from "../screens/BookingScreen";
 import ProfileScreen from "../screens/ProfileScreen";
+import SalonsScreen from "../screens/SalonsScreen";
 import { Ionicons } from "@expo/vector-icons";
 import { NavigationContainer } from "@react-navigation/native";
 
@@ -95,6 +96,11 @@ const StackNavigator = () => {
         <Stack.Screen
           name="Main"
           component={BottomTabs}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Salons"
+          component={SalonsScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

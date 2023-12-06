@@ -18,6 +18,7 @@ import { Fontisto } from "@expo/vector-icons";
 import DatePicker from "react-native-date-ranges";
 import { Entypo } from "@expo/vector-icons";
 import DropDownDistrict from "../components/DropDownDistrict";
+import SalonsScreen from "./SalonsScreen";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -94,7 +95,10 @@ const HomeScreen = () => {
       const formDataJSON = JSON.stringify(formData);
       console.log("Form Data JSON:", formDataJSON);
 
-      // Perform additional actions if needed
+      navigation.navigate("Salons");
+      // , {
+      //   formData: { ...formData, selectedDates: dates },
+      // });
     }
   };
   return (

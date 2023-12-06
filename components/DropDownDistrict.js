@@ -36,7 +36,7 @@ const DropDownDistrict = ({ onSelect }) => {
       }}
       onPress={() => {
         setSelectedOption(item);
-        onSelect(item); // Call the onSelect callback with the selected item
+        onSelect(item);
         setModalVisible(false);
       }}
     >
