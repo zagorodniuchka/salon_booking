@@ -11,14 +11,24 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import img1 from "../assets/salon_home.png";
+import DropDownService from "../components/DropDownService";
 import { Feather } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
 import DatePicker from "react-native-date-ranges";
 import { Entypo } from "@expo/vector-icons";
+import { BottomModal } from "react-native-modals";
+import { ModalFooter } from "react-native-modals";
+import { ModalButton } from "react-native-modals";
+import { ModalTitle } from "react-native-modals";
+import { SlideAnimation } from "react-native-modals";
+import { ModalContent } from "react-native-modals";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [selectedDates, setSelectedDates] = useState();
+  const [service, setService] = useState();
+  const [modalVisible, setModalVisible] = useState(false);
+
   console.log(selectedDates);
 
   useLayoutEffect(() => {
@@ -60,115 +70,112 @@ const HomeScreen = () => {
   };
 
   return (
-    <View>
-      <Image source={img1} style={{ width: "100%", height: 250 }} />
-      <ScrollView
-        style={{
-          margin: 20,
-          borderColor: "#FFC72C",
-          borderWidth: 3,
-          borderRadius: 6,
-        }}
-      >
-        <View>
-          <Pressable
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              paddingHorizontal: 10,
-              borderColor: "#FFC72C",
-              borderWidth: 2,
-              paddingVertical: 15,
-            }}
-          >
-            <Feather name="search" size={24} color="black" />
-            <TextInput placeholder="  Enter your district" />
-          </Pressable>
-          <Pressable
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              paddingHorizontal: 10,
-              borderColor: "#FFC72C",
-              borderWidth: 2,
-              paddingVertical: 15,
-              gap: 15,
-            }}
-          >
-            <Fontisto name="date" size={24} color="black" />
-            <DatePicker
+    <>
+      <View>
+        <Image source={img1} style={{ width: "100%", height: 250 }} />
+        <ScrollView
+          style={{
+            margin: 20,
+            borderColor: "#FFC72C",
+            borderWidth: 3,
+            borderRadius: 6,
+          }}
+        >
+          <View>
+            <Pressable
               style={{
-                width: 350,
-                height: 30,
-                borderRadius: 0,
-                borderWidth: 0,
-                borderColor: "transparent",
-              }}
-              customStyles={{
-                placeholderText: {
-                  fontSize: 15,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginRight: "auto",
-                },
-                headerStyle: {
-                  backgroundColor: "#003580",
-                },
-                contentText: {
-                  fontSize: 15,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginRight: "auto",
-                },
-              }}
-              selectedBgColor="#0047AB"
-              customButton={(onConfirm) => customButton(onConfirm)}
-              onConfirm={(startDate, endDate) =>
-                setSelectedDates(startDate, endDate)
-              }
-              allowFontScaling={false}
-              placeholder={"Apr 27, 2018 - Jul 18, 2018"}
-              mode={"range"}
-            />
-          </Pressable>
-          <Pressable
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              paddingHorizontal: 10,
-              borderColor: "#FFC72C",
-              borderWidth: 2,
-              paddingVertical: 15,
-              gap: 15,
-            }}
-          >
-            <Entypo name="scissors" size={24} color="black" />
-            <TextInput placeholder="Choose service" />
-          </Pressable>
-          <Pressable
-            style={{
-              paddingHorizontal: 10,
-              borderColor: "#FFC72C",
-              borderWidth: 2,
-              paddingVertical: 15,
-              backgroundColor: "#2a52be",
-              gap: 15,
-            }}
-          >
-            <Text
-              style={{
-                textAlign: "center",
-                fontSize: 15,
-                fontWeight: "500",
-                color: "white",
+                flexDirection: "row",
+                alignItems: "center",
+                paddingHorizontal: 10,
+                borderColor: "#FFC72C",
+                borderWidth: 2,
+                paddingVertical: 15,
+                gap: 15,
               }}
             >
-              Search
-            </Text>
-          </Pressable>
-        </View>
-      </ScrollView>
-    </View>
+              <Feather name="search" size={24} color="black" />
+              <TextInput
+                placeholderTextColor="black"
+                placeholder="Enter your district"
+              />
+            </Pressable>
+            <Pressable
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                paddingHorizontal: 10,
+                borderColor: "#FFC72C",
+                borderWidth: 2,
+                paddingVertical: 15,
+                gap: 15,
+              }}
+            >
+              <Fontisto name="date" size={24} color="black" />
+              <DatePicker
+                style={{
+                  width: 350,
+                  height: 30,
+                  borderRadius: 0,
+                  borderWidth: 0,
+                  borderColor: "transparent",
+                }}
+                customStyles={{
+                  placeholderText: {
+                    fontSize: 15,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    marginRight: "auto",
+                  },
+                  headerStyle: {
+                    backgroundColor: "#003580",
+                  },
+                  contentText: {
+                    fontSize: 15,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    marginRight: "auto",
+                  },
+                }}
+                selectedBgColor="#0047AB"
+                customButton={(onConfirm) => customButton(onConfirm)}
+                onConfirm={(startDate, endDate) =>
+                  setSelectedDates(startDate, endDate)
+                }
+                allowFontScaling={false}
+                placeholder={"Apr 27, 2018 - Jul 18, 2018"}
+                mode={"range"}
+              />
+            </Pressable>
+            <DropDownService
+              icon={<Entypo name="scissors" size={24} color="black" />}
+              placeholder="Choose service"
+              onSelect={(value) => setService(value)}
+            />
+            <Pressable
+              style={{
+                paddingHorizontal: 10,
+                borderColor: "#FFC72C",
+                borderWidth: 2,
+                paddingVertical: 15,
+                backgroundColor: "#2a52be",
+                gap: 15,
+              }}
+            >
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontSize: 15,
+                  fontWeight: "500",
+                  color: "white",
+                }}
+              >
+                Search
+              </Text>
+            </Pressable>
+          </View>
+        </ScrollView>
+      </View>
+    </>
   );
 };
 
