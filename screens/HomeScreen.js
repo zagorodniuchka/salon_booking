@@ -16,12 +16,6 @@ import { Feather } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
 import DatePicker from "react-native-date-ranges";
 import { Entypo } from "@expo/vector-icons";
-import { BottomModal } from "react-native-modals";
-import { ModalFooter } from "react-native-modals";
-import { ModalButton } from "react-native-modals";
-import { ModalTitle } from "react-native-modals";
-import { SlideAnimation } from "react-native-modals";
-import { ModalContent } from "react-native-modals";
 import DropDownDistrict from "../components/DropDownDistrict";
 
 const HomeScreen = () => {

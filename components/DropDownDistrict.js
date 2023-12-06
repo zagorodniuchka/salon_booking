@@ -87,9 +87,21 @@ const DropDownDistrict = () => {
             />
             <Pressable
               onPress={() => setModalVisible(false)}
-              style={{ marginTop: 10, alignItems: "center" }}
+              style={{
+                alignItems: "center",
+                backgroundColor: "#2a52be",
+                height: 30,
+              }}
             >
-              <Text style={{ color: "blue" }}>Cancel</Text>
+              <Text
+                style={{
+                  color: "white",
+                  backgroundColor: "#2a52be",
+                  marginTop: 5,
+                }}
+              >
+                Cancel
+              </Text>
             </Pressable>
           </View>
         </View>
