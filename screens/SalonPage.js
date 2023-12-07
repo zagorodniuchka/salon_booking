@@ -1,15 +1,11 @@
 import React, { useLayoutEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Alert, Pressable } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 const SalonPage = ({ route }) => {
-  console.log("Route Params:", route.params);
   const { salonName, workingHours, address } = route.params;
-  console.log("Salon Name:", salonName);
-  console.log("Working Hours:", workingHours);
-  console.log("Address:", address);
-
   const navigation = useNavigation();
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: true,
@@ -30,6 +26,8 @@ const SalonPage = ({ route }) => {
   const start = parseInt(startHour, 10);
   const end = parseInt(endHour, 10);
 
+  const [selectedHour, setSelectedHour] = useState(null);
+
   const allWorkingHours = Array.from(
     { length: end - start + 1 },
     (_, index) => {
@@ -37,17 +35,68 @@ const SalonPage = ({ route }) => {
       return `${hour < start ? "0" : ""}${hour}:00`;
     }
   );
+
+  const showScheduleAlert = (hour) => {
+    if (selectedHour === hour) {
+      // If the selected hour is pressed again, show cancellation confirmation
+      Alert.alert(
+        "Confirm Cancellation",
+        "Are you sure you want to cancel the scheduled service?",
+        [
+          {
+            text: "No",
+            style: "cancel",
+          },
+          {
+            text: "Yes",
+            onPress: () => {
+              // Handle cancellation logic here
+              console.log(`Service at ${hour} cancelled`);
+              setSelectedHour(null);
+            },
+          },
+        ]
+      );
+    } else {
+      // If a new hour is pressed, show scheduling confirmation
+      Alert.alert(
+        "Schedule Service",
+        `Are you sure you want to schedule the service on ${hour}?\nPrice: 300-400 mdl`,
+        [
+          {
+            text: "No",
+            style: "cancel",
+          },
+          {
+            text: "Yes",
+            onPress: () => {
+              // Handle scheduling logic here
+              console.log(`Service scheduled at ${hour}`);
+              setSelectedHour(hour);
+            },
+          },
+        ]
+      );
+    }
+  };
+
   return (
     <View>
       <View style={styles.addressContainer}>
         <Text style={styles.addressText}>{address}</Text>
       </View>
-
       <View style={styles.hoursContainer}>
         {allWorkingHours.map((hour, index) => (
-          <View key={index} style={styles.hourRectangle}>
+          <Pressable
+            key={index}
+            style={[
+              styles.hourRectangle,
+              selectedHour === hour && styles.selectedHour,
+            ]}
+            onPress={() => showScheduleAlert(hour)}
+          >
             <Text style={styles.hourText}>{hour}</Text>
-          </View>
+          </Pressable>
         ))}
       </View>
     </View>
@@ -69,6 +118,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     margin: 10,
+    borderRadius: 10,
+  },
+  selectedHour: {
+    backgroundColor: "#ADD8E6",
   },
   hourText: {
     fontSize: 16,

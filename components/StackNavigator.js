@@ -37,21 +37,6 @@ const StackNavigator = () => {
         />
 
         <Tab.Screen
-          name="Saved"
-          component={SavedScreen}
-          options={{
-            tabBarLabel: "Saved",
-            headerShown: false,
-            tabBarIcon: ({ focused }) =>
-              focused ? (
-                <AntDesign name="heart" size={24} color="#003580" />
-              ) : (
-                <AntDesign name="hearto" size={24} color="black" />
-              ),
-          }}
-        />
-
-        <Tab.Screen
           name="Bookings"
           component={BookingScreen}
           options={{
