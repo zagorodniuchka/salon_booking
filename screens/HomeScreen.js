@@ -95,10 +95,16 @@ const HomeScreen = () => {
       const formDataJSON = JSON.stringify(formData);
       console.log("Form Data JSON:", formDataJSON);
 
-      navigation.navigate("Salons");
-      // , {
-      //   formData: { ...formData, selectedDates: dates },
-      // });
+      fetch('https://salon-booking-41f4bef7b30e.herokuapp.com/')
+      .then(response => response.json())
+      .then(data => {
+          const filteredData = data.filter(salon => {
+              return salon.district === district && salon.service.includes(service);
+          });
+          console.log(filteredData);
+          navigation.navigate("Salons",{salonsData: filteredData});
+      })
+      .catch(error => console.error('Error:', error));
     }
   };
   return (
