@@ -11,6 +11,7 @@ import ProfileScreen from "../screens/ProfileScreen";
 import SalonsScreen from "../screens/SalonsScreen";
 import { Ionicons } from "@expo/vector-icons";
 import { NavigationContainer } from "@react-navigation/native";
+import SalonPage from "../screens/SalonPage";
 
 const StackNavigator = () => {
   const Tab = createBottomTabNavigator();
@@ -101,6 +102,11 @@ const StackNavigator = () => {
         <Stack.Screen
           name="Salons"
           component={SalonsScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="SalonPage"
+          component={SalonPage}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

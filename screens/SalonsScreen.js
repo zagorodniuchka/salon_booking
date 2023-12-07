@@ -28,9 +28,9 @@ const SalonsScreen = () => {
 
   // Dummy salon data (replace with actual data)
   const salonsData = [
-    { name: "Salon A", address: "123 Main St", hours: "9:00 AM - 6:00 PM" },
-    { name: "Salon B", address: "456 Elm St", hours: "10:00 AM - 7:00 PM" },
-    { name: "Salon B", address: "456 Elm St", hours: "10:00 AM - 7:00 PM" },
+    { name: "Salon A", address: "123 Main St", hours: "9:00 AM - 17:00 PM" },
+    { name: "Salon B", address: "456 Elm St", hours: "10:00 AM - 18:00" },
+    { name: "JOPA", address: "JOPA 20", hours: "10:00  - 23:00 " },
     { name: "Salon B", address: "456 Elm St", hours: "10:00 AM - 7:00 PM" },
     { name: "Salon B", address: "456 Elm St", hours: "10:00 AM - 7:00 PM" },
     { name: "Salon B", address: "456 Elm St", hours: "10:00 AM - 7:00 PM" },
@@ -74,6 +74,11 @@ const SalonsScreen = () => {
               // Handle the press event for a specific salon
               // You can navigate to a detailed view or perform any other action
               console.log("Pressed on salon:", salon);
+              navigation.navigate("SalonPage", {
+                salonName: salon.name,
+                workingHours: salon.hours.split(" - "),
+                address: salon.address,
+              });
             }}
           >
             <Entypo name="scissors" size={24} color="black" />
