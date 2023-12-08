@@ -121,7 +121,19 @@ const HomeScreen = () => {
             console.log(formattedData);
             navigation.navigate("Salons", { salonsData: formattedData });
           } else {
-            console.log("No matching salons found");
+            Alert.alert(
+              "Sorry!",
+              "No matching salons found",
+              [
+                {
+                  text: "Cancel",
+                  onPress: () => console.log("Cancel Pressed"),
+                  style: "cancel",
+                },
+                { text: "OK", onPress: () => console.log("OK Pressed") },
+              ],
+              { cancelable: false }
+            );
           }
         })
         .catch((error) => console.error("Error:", error));
