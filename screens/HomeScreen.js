@@ -18,7 +18,8 @@ import { Fontisto } from "@expo/vector-icons";
 import DatePicker from "react-native-date-ranges";
 import { Entypo } from "@expo/vector-icons";
 import DropDownDistrict from "../components/DropDownDistrict";
-import SalonsScreen from "./SalonsScreen";
+import { format } from "date-fns";
+import { moment } from "moment";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -33,7 +34,6 @@ const HomeScreen = () => {
   });
   const districtRoute = useRoute();
   const { selectedDates, district, service } = formData;
-  console.log(selectedDates);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -74,7 +74,7 @@ const HomeScreen = () => {
   };
 
   const searchSalons = () => {
-    console.log("Debugging:", dates.startDate, district, service);
+    console.log(formData);
 
     if (!dates?.startDate || !district || !service) {
       Alert.alert(
@@ -91,34 +91,20 @@ const HomeScreen = () => {
         { cancelable: false }
       );
     } else {
-      // Move formatDate function here
-      const formatDate = (startDateString) => {
-        const date = new Date(startDateString);
-        console.log(date);
+      const formDataJSON = JSON.stringify(formData);
 
-        if (isNaN(date.getTime())) {
-          // Handle invalid date string
-          console.error("Invalid date string:", startDateString);
-          return null;
-        }
-
-        const daysOfWeek = ["Sn", "Mn", "Tue", "Wed", "Thu", "Fri", "Sat"];
-        const dayOfWeek = daysOfWeek[date.getDay()];
-        const formattedTime = date.toLocaleTimeString();
-
-        return {
-          dayOfWeek,
-          formattedTime,
-        };
-      };
-
-      // Use formatDate here
-      const formattedDate = formatDate(dates.startDate);
-
-      if (formattedDate) {
-        console.log(`Day of week: ${formattedDate.dayOfWeek}`);
-        console.log(`Formatted time: ${formattedDate.formattedTime}`);
-      }
+      fetch("https://salon-booking-41f4bef7b30e.herokuapp.com/")
+        .then((response) => response.json())
+        .then((data) => {
+          const filteredData = data.filter((salon) => {
+            return (
+              salon.district === district && salon.service.includes(service)
+            );
+          });
+          // console.log(filteredData);
+          navigation.navigate("Salons", { salonsData: filteredData });
+        })
+        .catch((error) => console.error("Error:", error));
     }
   };
   return (
@@ -180,13 +166,40 @@ const HomeScreen = () => {
                 }}
                 selectedBgColor="#0047AB"
                 customButton={(onConfirm) => customButton(onConfirm)}
-                onConfirm={(startDate, endDate) => {
-                  setDates({ startDate, endDate });
+                onConfirm={(dateRange) => {
+                  var startDate = new Date(
+                    dateRange.startDate.replace(/\//g, "-")
+                  );
+                  var endDate = new Date(dateRange.endDate.replace(/\//g, "-"));
+                  const dayOfWeekIndex = startDate.getDay();
+                  const daysOfWeek = [
+                    "Sun",
+                    "Mon",
+                    "Tue",
+                    "Wed",
+                    "Thu",
+                    "Fri",
+                    "Sat",
+                  ];
+
+                  const dayOfWeek = daysOfWeek[dayOfWeekIndex];
+                  console.log(
+                    `The day of the week for startDate is: ${dayOfWeek}`
+                  );
+                  console.log(endDate);
+                  console.log(startDate);
+                  setDates({
+                    startDate: dateRange.startDate,
+                    endDate: dateRange.endDate,
+                  });
+
+                  //console.log(formattedStartDate);
                   setFormData({
                     ...formData,
                     selectedDates: {
-                      startDate: startDate?.startDate,
-                      endDate: startDate?.endDate,
+                      startDate: dateRange.startDate,
+                      endDate: dateRange.endDate,
+                      dayOfWeek: dayOfWeek,
                     },
                   });
                 }}
