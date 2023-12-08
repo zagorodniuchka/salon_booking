@@ -74,8 +74,6 @@ const HomeScreen = () => {
   };
 
   const searchSalons = () => {
-    console.log(formData);
-
     if (!dates?.startDate || !district || !service) {
       Alert.alert(
         "Invalid Details",
@@ -93,16 +91,38 @@ const HomeScreen = () => {
     } else {
       const formDataJSON = JSON.stringify(formData);
 
-      fetch("https://salon-booking-41f4bef7b30e.herokuapp.com/")
+      fetch(
+        "https://firebasestorage.googleapis.com/v0/b/salon-booking-dc6f2.appspot.com/o/data.json?alt=media&token=e085fb63-dbdb-4548-b444-ea7f7d356218"
+      )
         .then((response) => response.json())
         .then((data) => {
+          const dayOfWeek = formData.selectedDates.dayOfWeek;
+
           const filteredData = data.filter((salon) => {
             return (
               salon.district === district && salon.service.includes(service)
             );
           });
-          // console.log(filteredData);
-          navigation.navigate("Salons", { salonsData: filteredData });
+
+          if (filteredData.length > 0) {
+            const formattedData = filteredData.map((salon) => {
+              const matchingWorkingHours = salon.workingHours
+                ? salon.workingHours
+                    .filter((hours) => hours.startsWith(dayOfWeek))
+                    .join(", ")
+                : "";
+
+              return {
+                ...salon,
+                workingHours: matchingWorkingHours,
+              };
+            });
+
+            console.log(formattedData);
+            navigation.navigate("Salons", { salonsData: formattedData });
+          } else {
+            console.log("No matching salons found");
+          }
         })
         .catch((error) => console.error("Error:", error));
     }
@@ -183,17 +203,10 @@ const HomeScreen = () => {
                   ];
 
                   const dayOfWeek = daysOfWeek[dayOfWeekIndex];
-                  console.log(
-                    `The day of the week for startDate is: ${dayOfWeek}`
-                  );
-                  console.log(endDate);
-                  console.log(startDate);
                   setDates({
                     startDate: dateRange.startDate,
                     endDate: dateRange.endDate,
                   });
-
-                  //console.log(formattedStartDate);
                   setFormData({
                     ...formData,
                     selectedDates: {

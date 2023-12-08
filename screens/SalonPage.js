@@ -3,9 +3,11 @@ import { View, Text, StyleSheet, Alert, Pressable } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 const SalonPage = ({ route }) => {
+  console.log("Route Params:", route.params);
   const { salonName, workingHours, address } = route.params;
-  const navigation = useNavigation();
+  const [selectedHour, setSelectedHour] = useState(null);
 
+  const navigation = useNavigation();
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: true,
@@ -22,45 +24,18 @@ const SalonPage = ({ route }) => {
     });
   }, [navigation]);
 
-  const [startHour, endHour] = workingHours;
+  const dayAndHours = workingHours.split(" ");
+  const [startHour, endHour] = dayAndHours[1].split("-");
   const start = parseInt(startHour, 10);
   const end = parseInt(endHour, 10);
 
-  console.log(workingHours);
-
-  const [selectedHour, setSelectedHour] = useState(null);
-
-  const parseWorkingHours = (workingHours) => {
-    if (typeof workingHours !== "string" || !workingHours.trim()) {
-      return [];
+  const allWorkingHours = Array.from(
+    { length: end - start + 1 },
+    (_, index) => {
+      const hour = start + index;
+      return `${hour < start ? "0" : ""}${hour}:00`;
     }
-    const daysAndHours = workingHours.split(/,\s*/); // Split by comma and optional space
-
-    const formattedHours = daysAndHours.flatMap((dayAndHour) => {
-      const [day, hours] = dayAndHour.split(": ");
-      const [start, end] = hours.split("-");
-
-      return Array.from(
-        { length: end - start + 1 },
-        (_, index) => `${day} ${parseInt(start, 10) + index}-${end}`
-      );
-    });
-
-    return formattedHours;
-  };
-
-  const parsedWorkingHours = workingHours
-    ? parseWorkingHours(workingHours)
-    : [];
-  const formattedWorkingHours = parseWorkingHours(workingHours);
-
-  // const allWorkingHours = Array.from(
-  //   { length: end - start + 1 },
-  //   (_, index) => {
-  //     const hour = start + index;
-  //     return `${hour < start ? "0" : ""}${hour}:00`;
-  //   }
-  // );
+  );
 
   const showScheduleAlert = (hour) => {
     if (selectedHour === hour) {
@@ -106,25 +81,26 @@ const SalonPage = ({ route }) => {
     }
   };
 
-  console.log(formattedWorkingHours);
-
   return (
     <View>
       <View style={styles.addressContainer}>
         <Text style={styles.addressText}>{address}</Text>
       </View>
+
       <View style={styles.hoursContainer}>
-        {formattedWorkingHours.map((hour, index) => (
-          <Pressable
-            key={index}
-            style={[
-              styles.hourRectangle,
-              selectedHour === hour && styles.selectedHour,
-            ]}
-            onPress={() => showScheduleAlert(hour)}
-          >
-            <Text style={styles.hourText}>{hour}</Text>
-          </Pressable>
+        {allWorkingHours.map((hour, index) => (
+          <View key={index} style={styles.hourRectangle}>
+            <Pressable
+              key={index}
+              style={[
+                styles.hourRectangle,
+                selectedHour === hour && styles.selectedHour,
+              ]}
+              onPress={() => showScheduleAlert(hour)}
+            >
+              <Text style={styles.hourText}>{hour}</Text>
+            </Pressable>
+          </View>
         ))}
       </View>
     </View>
@@ -146,10 +122,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     margin: 10,
-    borderRadius: 10,
-  },
-  selectedHour: {
-    backgroundColor: "#ADD8E6",
   },
   hourText: {
     fontSize: 16,
@@ -158,6 +130,10 @@ const styles = StyleSheet.create({
   addressContainer: {
     alignItems: "center",
     marginTop: 10,
+    borderRadius: 10,
+  },
+  selectedHour: {
+    backgroundColor: "#ADD8E6",
   },
   addressText: {
     fontSize: 25,

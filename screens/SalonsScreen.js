@@ -57,7 +57,7 @@ const SalonsScreen = () => {
               console.log("Pressed on salon:", salon);
               navigation.navigate("SalonPage", {
                 salonName: salon.name,
-                workingHours: salon.workingHours.split("-"),
+                workingHours: salon.workingHours,
                 address: salon.address,
               });
             }}
