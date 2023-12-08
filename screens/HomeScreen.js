@@ -91,20 +91,34 @@ const HomeScreen = () => {
         { cancelable: false }
       );
     } else {
-      // Save the form data in JSON format
-      const formDataJSON = JSON.stringify(formData);
-      console.log("Form Data JSON:", formDataJSON);
+      // Move formatDate function here
+      const formatDate = (startDateString) => {
+        const date = new Date(startDateString);
+        console.log(date);
 
-      fetch('https://salon-booking-41f4bef7b30e.herokuapp.com/')
-      .then(response => response.json())
-      .then(data => {
-          const filteredData = data.filter(salon => {
-              return salon.district === district && salon.service.includes(service);
-          });
-          console.log(filteredData);
-          navigation.navigate("Salons",{salonsData: filteredData});
-      })
-      .catch(error => console.error('Error:', error));
+        if (isNaN(date.getTime())) {
+          // Handle invalid date string
+          console.error("Invalid date string:", startDateString);
+          return null;
+        }
+
+        const daysOfWeek = ["Sn", "Mn", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        const dayOfWeek = daysOfWeek[date.getDay()];
+        const formattedTime = date.toLocaleTimeString();
+
+        return {
+          dayOfWeek,
+          formattedTime,
+        };
+      };
+
+      // Use formatDate here
+      const formattedDate = formatDate(dates.startDate);
+
+      if (formattedDate) {
+        console.log(`Day of week: ${formattedDate.dayOfWeek}`);
+        console.log(`Formatted time: ${formattedDate.formattedTime}`);
+      }
     }
   };
   return (

@@ -26,8 +26,8 @@ const SalonsScreen = () => {
     });
   }, [navigation]);
 
-  // Dummy salon data (replace with actual data)
-  const {salonsData} = route.params;
+  const { salonsData } = route.params;
+  console.log(salonsData);
 
   return (
     <>
@@ -57,7 +57,7 @@ const SalonsScreen = () => {
               console.log("Pressed on salon:", salon);
               navigation.navigate("SalonPage", {
                 salonName: salon.name,
-                workingHours: salon.hours.split(" - "),
+                workingHours: salon.workingHours.split("-"),
                 address: salon.address,
               });
             }}
@@ -66,7 +66,7 @@ const SalonsScreen = () => {
             <View>
               <Text>{salon.name}</Text>
               <Text>{salon.address}</Text>
-              <Text>{salon.hours}</Text>
+              <Text>{salon.workingHours}</Text>
             </View>
           </Pressable>
         ))}

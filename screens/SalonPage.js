@@ -26,15 +26,41 @@ const SalonPage = ({ route }) => {
   const start = parseInt(startHour, 10);
   const end = parseInt(endHour, 10);
 
+  console.log(workingHours);
+
   const [selectedHour, setSelectedHour] = useState(null);
 
-  const allWorkingHours = Array.from(
-    { length: end - start + 1 },
-    (_, index) => {
-      const hour = start + index;
-      return `${hour < start ? "0" : ""}${hour}:00`;
+  const parseWorkingHours = (workingHours) => {
+    if (typeof workingHours !== "string" || !workingHours.trim()) {
+      return [];
     }
-  );
+    const daysAndHours = workingHours.split(/,\s*/); // Split by comma and optional space
+
+    const formattedHours = daysAndHours.flatMap((dayAndHour) => {
+      const [day, hours] = dayAndHour.split(": ");
+      const [start, end] = hours.split("-");
+
+      return Array.from(
+        { length: end - start + 1 },
+        (_, index) => `${day} ${parseInt(start, 10) + index}-${end}`
+      );
+    });
+
+    return formattedHours;
+  };
+
+  const parsedWorkingHours = workingHours
+    ? parseWorkingHours(workingHours)
+    : [];
+  const formattedWorkingHours = parseWorkingHours(workingHours);
+
+  // const allWorkingHours = Array.from(
+  //   { length: end - start + 1 },
+  //   (_, index) => {
+  //     const hour = start + index;
+  //     return `${hour < start ? "0" : ""}${hour}:00`;
+  //   }
+  // );
 
   const showScheduleAlert = (hour) => {
     if (selectedHour === hour) {
@@ -80,13 +106,15 @@ const SalonPage = ({ route }) => {
     }
   };
 
+  console.log(formattedWorkingHours);
+
   return (
     <View>
       <View style={styles.addressContainer}>
         <Text style={styles.addressText}>{address}</Text>
       </View>
       <View style={styles.hoursContainer}>
-        {allWorkingHours.map((hour, index) => (
+        {formattedWorkingHours.map((hour, index) => (
           <Pressable
             key={index}
             style={[
