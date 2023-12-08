@@ -24,8 +24,9 @@ const SalonPage = ({ route }) => {
     });
   }, [navigation]);
 
-  const dayAndHours = workingHours.split(" ");
-  const [startHour, endHour] = dayAndHours[1].split("-");
+  const hoursArray = workingHours ? workingHours.split(" ") : [];
+  const [startHour, endHour] =
+    hoursArray.length > 1 ? hoursArray[1].split("-") : [0, 0];
   const start = parseInt(startHour, 10);
   const end = parseInt(endHour, 10);
 
