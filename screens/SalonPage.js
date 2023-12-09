@@ -71,6 +71,7 @@ const SalonPage = ({ route }) => {
       setItems(bookings);
       setLoading(false);
     };
+
     fetchProducts();
   }, [items]);
   const savedBookings = items.filter(
@@ -140,6 +141,7 @@ const SalonPage = ({ route }) => {
 
           console.log("Booking added with ID: ", docRef.id);
 
+          setItems((prevItems) => [...prevItems, newBooking]); // Update items state
           setApprovedBookings((prevBookings) => [...prevBookings, newBooking]);
           setSelectedHour(null);
         } catch (error) {
@@ -184,7 +186,7 @@ const SalonPage = ({ route }) => {
           renderItem={({ item }) => (
             <View style={styles.approvedBooking}>
               <Text>{item.salonName}</Text>
-              <Text>{item.address}</Text>
+              <Text>{item.salonAddress}</Text>
               <Text>{item.hour}</Text>
             </View>
           )}

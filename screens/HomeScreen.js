@@ -39,7 +39,6 @@ const HomeScreen = () => {
     navigation.setOptions({
       headerShown: true,
       title: "SALON BOOKING",
-      Image,
       headerTitleStyle: {
         fontSize: 20,
         fontWeight: "bold",
@@ -49,14 +48,6 @@ const HomeScreen = () => {
         backgroundColor: "#003580",
         height: 110,
       },
-      headerRight: () => (
-        <Ionicons
-          name="notifications-outline"
-          size={24}
-          color="white"
-          style={{ marginRight: 12 }}
-        />
-      ),
     });
   }, []);
   const customButton = (onConfirm) => {
