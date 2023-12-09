@@ -11,8 +11,6 @@ import {
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import firebase from "firebase/app";
-import "firebase/firestore";
 import { auth, db } from "../FireBase";
 import { setDoc, doc } from "firebase/firestore";
 
@@ -49,7 +47,6 @@ const RegisterScreen = () => {
       }
     );
   };
-
   return (
     <SafeAreaView
       style={{
@@ -72,7 +69,7 @@ const RegisterScreen = () => {
           </Text>
 
           <Text style={{ marginTop: 15, fontSize: 18, fontWeight: "500" }}>
-            Create an account
+            Create an Account
           </Text>
         </View>
 
@@ -117,26 +114,28 @@ const RegisterScreen = () => {
               }}
             />
           </View>
-        </View>
-        <View style={{ marginTop: 15 }}>
-          <Text style={{ fontSize: 18, fontWeight: "600", color: "gray" }}>
-            Phone
-          </Text>
 
-          <TextInput
-            value={phone}
-            onChangeText={(text) => setPhone(text)}
-            placeholder="enter your Phone No"
-            placeholderTextColor={"black"}
-            style={{
-              fontSize: password ? 18 : 18,
-              borderBottomColor: "gray",
-              borderBottomWidth: 1,
-              marginVertical: 10,
-              width: 300,
-            }}
-          />
+          <View style={{ marginTop: 15 }}>
+            <Text style={{ fontSize: 18, fontWeight: "600", color: "gray" }}>
+              Phone
+            </Text>
+
+            <TextInput
+              value={phone}
+              onChangeText={(text) => setPhone(text)}
+              placeholder="enter your Phone No"
+              placeholderTextColor={"black"}
+              style={{
+                fontSize: password ? 18 : 18,
+                borderBottomColor: "gray",
+                borderBottomWidth: 1,
+                marginVertical: 10,
+                width: 300,
+              }}
+            />
+          </View>
         </View>
+
         <Pressable
           onPress={register}
           style={{
@@ -166,7 +165,7 @@ const RegisterScreen = () => {
           style={{ marginTop: 20 }}
         >
           <Text style={{ textAlign: "center", color: "gray", fontSize: 17 }}>
-            Already have an account? Sign in!
+            Already have an account? Sign In
           </Text>
         </Pressable>
       </KeyboardAvoidingView>
