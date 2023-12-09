@@ -7,9 +7,13 @@ import {
   TextInput,
   Pressable,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 const LoginScreen = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigation = useNavigation();
   return (
     <SafeAreaView
       style={{
@@ -43,12 +47,12 @@ const LoginScreen = () => {
             </Text>
 
             <TextInput
-              //value={email}
-              //onChangeText={(text) => setEmail(text)}
+              value={email}
+              onChangeText={(text) => setEmail(text)}
               placeholder="enter your email id"
               placeholderTextColor={"black"}
               style={{
-                fontSize: 18,
+                fontSize: email ? 18 : 18,
                 borderBottomColor: "gray",
                 borderBottomWidth: 1,
                 marginVertical: 10,
@@ -63,13 +67,13 @@ const LoginScreen = () => {
             </Text>
 
             <TextInput
-              //value={password}
-              //onChangeText={(text) => setPassword(text)}
+              value={password}
+              onChangeText={(text) => setPassword(text)}
               secureTextEntry={true}
               placeholder="Password"
               placeholderTextColor={"black"}
               style={{
-                fontSize: 18,
+                fontSize: password ? 18 : 18,
                 borderBottomColor: "gray",
                 borderBottomWidth: 1,
                 marginVertical: 10,
