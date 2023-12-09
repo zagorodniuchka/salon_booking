@@ -16,7 +16,7 @@ const ProfileScreen = () => {
     return () => unsubscribe();
   }, []);
 
-  const username = user.email.split("@")[0];
+  const username = user?.email.split("@")[0];
   console.log(username);
 
   return (

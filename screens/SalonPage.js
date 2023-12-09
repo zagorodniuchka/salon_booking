@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect, useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,7 +8,12 @@ import {
   FlatList,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  getDocs,
+} from "firebase/firestore";
 import { auth, db } from "../FireBase";
 
 const SalonPage = ({ route }) => {
@@ -47,6 +52,33 @@ const SalonPage = ({ route }) => {
       return `${hour < start ? "0" : ""}${hour}:00`;
     }
   );
+
+  const [loading, setLoading] = useState(false);
+  const [items, setItems] = useState([]);
+  const currentUser = auth.currentUser;
+  useEffect(() => {
+    if (items.length > 0) return;
+
+    setLoading(true);
+
+    const fetchProducts = async () => {
+      const colRef = collection(db, "bookings");
+      const docsSnap = await getDocs(colRef);
+      const bookings = docsSnap.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setItems(bookings);
+      setLoading(false);
+    };
+    fetchProducts();
+  }, [items]);
+  const savedBookings = items.filter(
+    (item) =>
+      item.userId === currentUser?.uid &&
+      item.salonName === route.params.salonName
+  );
+  console.log(savedBookings);
 
   const showScheduleAlert = (hour) => {
     if (selectedHour === hour) {
@@ -94,10 +126,6 @@ const SalonPage = ({ route }) => {
 
   const approveBooking = async () => {
     if (selectedHour) {
-      // Get the current user
-      const currentUser = auth.currentUser;
-
-      // Check if the user is authenticated
       if (currentUser) {
         const newBooking = {
           userId: currentUser.uid,
@@ -108,15 +136,11 @@ const SalonPage = ({ route }) => {
         };
 
         try {
-          // Add the booking to the 'bookings' collection in Firestore
           const docRef = await addDoc(collection(db, "bookings"), newBooking);
 
           console.log("Booking added with ID: ", docRef.id);
 
-          // Update the local state
           setApprovedBookings((prevBookings) => [...prevBookings, newBooking]);
-
-          // Reset the selectedHour
           setSelectedHour(null);
         } catch (error) {
           console.error("Error adding booking: ", error.message);
@@ -155,7 +179,7 @@ const SalonPage = ({ route }) => {
       </Pressable>
       <View style={{ height: "100%" }}>
         <FlatList
-          data={approvedBookings}
+          data={savedBookings}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
             <View style={styles.approvedBooking}>
