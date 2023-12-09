@@ -8,6 +8,8 @@ import {
   FlatList,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { auth, db } from "../FireBase";
 
 const SalonPage = ({ route }) => {
   console.log("Route Params:", route.params);
@@ -90,15 +92,38 @@ const SalonPage = ({ route }) => {
     }
   };
 
-  const approveBooking = () => {
+  const approveBooking = async () => {
     if (selectedHour) {
-      const newBooking = {
-        salonName,
-        address,
-        hour: selectedHour,
-      };
-      setApprovedBookings((prevBookings) => [...prevBookings, newBooking]);
-      setSelectedHour(null);
+      // Get the current user
+      const currentUser = auth.currentUser;
+
+      // Check if the user is authenticated
+      if (currentUser) {
+        const newBooking = {
+          userId: currentUser.uid,
+          salonName,
+          salonAddress: address,
+          hour: selectedHour,
+          createdAt: serverTimestamp(),
+        };
+
+        try {
+          // Add the booking to the 'bookings' collection in Firestore
+          const docRef = await addDoc(collection(db, "bookings"), newBooking);
+
+          console.log("Booking added with ID: ", docRef.id);
+
+          // Update the local state
+          setApprovedBookings((prevBookings) => [...prevBookings, newBooking]);
+
+          // Reset the selectedHour
+          setSelectedHour(null);
+        } catch (error) {
+          console.error("Error adding booking: ", error.message);
+        }
+      } else {
+        console.error("User not authenticated");
+      }
     } else {
       Alert.alert("Select an Hour", "Please select an hour to approve.");
     }
