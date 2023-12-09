@@ -38,7 +38,7 @@ const HomeScreen = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: true,
-      title: "SALON BOOKING",
+      title: "GlamSetGo",
       headerTitleStyle: {
         fontSize: 20,
         fontWeight: "bold",
