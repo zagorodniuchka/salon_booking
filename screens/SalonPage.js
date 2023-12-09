@@ -1,11 +1,19 @@
 import React, { useLayoutEffect, useState } from "react";
-import { View, Text, StyleSheet, Alert, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Alert,
+  Pressable,
+  FlatList,
+} from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
 const SalonPage = ({ route }) => {
   console.log("Route Params:", route.params);
   const { salonName, workingHours, address } = route.params;
   const [selectedHour, setSelectedHour] = useState(null);
+  const [approvedBookings, setApprovedBookings] = useState([]);
 
   const navigation = useNavigation();
   useLayoutEffect(() => {
@@ -82,12 +90,25 @@ const SalonPage = ({ route }) => {
     }
   };
 
+  const approveBooking = () => {
+    if (selectedHour) {
+      const newBooking = {
+        salonName,
+        address,
+        hour: selectedHour,
+      };
+      setApprovedBookings((prevBookings) => [...prevBookings, newBooking]);
+      setSelectedHour(null);
+    } else {
+      Alert.alert("Select an Hour", "Please select an hour to approve.");
+    }
+  };
+
   return (
     <View>
       <View style={styles.addressContainer}>
         <Text style={styles.addressText}>{address}</Text>
       </View>
-
       <View style={styles.hoursContainer}>
         {allWorkingHours.map((hour, index) => (
           <View key={index} style={styles.hourRectangle}>
@@ -103,6 +124,22 @@ const SalonPage = ({ route }) => {
             </Pressable>
           </View>
         ))}
+      </View>
+      <Pressable onPress={approveBooking} style={styles.approveButton}>
+        <Text style={styles.approveButtonText}>Approve Booking</Text>
+      </Pressable>
+      <View style={{ height: "100%" }}>
+        <FlatList
+          data={approvedBookings}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <View style={styles.approvedBooking}>
+              <Text>{item.salonName}</Text>
+              <Text>{item.address}</Text>
+              <Text>{item.hour}</Text>
+            </View>
+          )}
+        />
       </View>
     </View>
   );
@@ -139,6 +176,24 @@ const styles = StyleSheet.create({
   addressText: {
     fontSize: 25,
     fontWeight: "bold",
+  },
+  approveButton: {
+    backgroundColor: "#2a52be",
+    padding: 10,
+    borderRadius: 5,
+    marginVertical: 10,
+    alignItems: "center",
+  },
+  approveButtonText: {
+    color: "white",
+    fontSize: 18,
+  },
+
+  approvedBooking: {
+    backgroundColor: "#ADD8E6",
+    padding: 10,
+    marginVertical: 5,
+    borderRadius: 5,
   },
 });
 

@@ -1,11 +1,8 @@
-// SalonsScreen.js
-
 import React, { useLayoutEffect, useState } from "react";
 import { View, Text, ScrollView, Pressable } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
-
 const SalonsScreen = () => {
   const navigation = useNavigation();
   const route = useRoute();
@@ -25,10 +22,8 @@ const SalonsScreen = () => {
       },
     });
   }, [navigation]);
-
   const { salonsData } = route.params;
   console.log(salonsData);
-
   return (
     <>
       <ScrollView
@@ -74,5 +69,4 @@ const SalonsScreen = () => {
     </>
   );
 };
-
 export default SalonsScreen;

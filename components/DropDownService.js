@@ -24,7 +24,7 @@ const DropDownService = ({ onSelect }) => {
     "Eyebrows",
     "Eyelashes",
     "Makeup",
-    "Hair Removal",
+    "Hair removal",
     "Botox",
     "Massage",
   ];

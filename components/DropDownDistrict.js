@@ -18,9 +18,9 @@ const DropDownDistrict = ({ onSelect }) => {
 
   const options = [
     "Centru",
-    "Rascani",
+    "Riscani",
     "Buiucani",
-    "Ciocani",
+    "Ciocana",
     "Telecentru",
     "Botanica",
   ];
