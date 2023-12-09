@@ -12,6 +12,7 @@ import SalonsScreen from "../screens/SalonsScreen";
 import { Ionicons } from "@expo/vector-icons";
 import { NavigationContainer } from "@react-navigation/native";
 import SalonPage from "../screens/SalonPage";
+import LoginScreen from "../screens/LoginScreen";
 
 const StackNavigator = () => {
   const Tab = createBottomTabNavigator();
@@ -79,6 +80,11 @@ const StackNavigator = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{ headerShown: false }}
+        />
         <Stack.Screen
           name="Main"
           component={BottomTabs}
