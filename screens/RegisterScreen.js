@@ -6,15 +6,49 @@ import {
   KeyboardAvoidingView,
   Pressable,
   TextInput,
+  Alert,
 } from "react-native";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import firebase from "firebase/app";
+import "firebase/firestore";
+import { auth, db } from "../FireBase";
+import { setDoc, doc } from "firebase/firestore";
 
 const RegisterScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const navigation = useNavigation();
+  const register = () => {
+    if (email === "" || password === "" || phone === "") {
+      Alert.alert(
+        "Invalid Detials",
+        "Please enter all the credentials",
+        [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel",
+          },
+          { text: "OK", onPress: () => console.log("OK Pressed") },
+        ],
+        { cancelable: false }
+      );
+    }
+    createUserWithEmailAndPassword(auth, email, password).then(
+      (userCredentials) => {
+        const user = userCredentials._tokenResponse.email;
+        const uid = auth.currentUser.uid;
+
+        setDoc(doc(db, "users", `${uid}`), {
+          email: user,
+          phone: phone,
+        });
+      }
+    );
+  };
 
   return (
     <SafeAreaView
@@ -92,11 +126,10 @@ const RegisterScreen = () => {
           <TextInput
             value={phone}
             onChangeText={(text) => setPhone(text)}
-            secureTextEntry={true}
-            placeholder="Phone"
+            placeholder="enter your Phone No"
             placeholderTextColor={"black"}
             style={{
-              fontSize: phone ? 18 : 18,
+              fontSize: password ? 18 : 18,
               borderBottomColor: "gray",
               borderBottomWidth: 1,
               marginVertical: 10,
@@ -104,8 +137,8 @@ const RegisterScreen = () => {
             }}
           />
         </View>
-
         <Pressable
+          onPress={register}
           style={{
             width: 200,
             backgroundColor: "#003580",
